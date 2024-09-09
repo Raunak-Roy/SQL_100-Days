@@ -1,0 +1,35 @@
+Question 1-----------------------------------------
+/*
+Picture yourself AS a data scientist Working for a workforce management platform.
+ Your objective is to calculate the percentage of employees. Who enjoy fully remote roles WITH salaries 
+ Exceeding $100,000 USD, Shedding light ON the attractiveness of high-paying remote positions IN today's job market.
+*/
+
+select * from salaries;
+
+set @total = (select count(*) from salaries where salary_in_usd > 100000);
+select @total;
+set @count = (select count(*) from salaries where salary_in_usd > 100000 and  remote_ratio = 100);
+select @count;
+
+set @percentage = round(((select @count/ (select @total)) * 100),2);
+select @percentage as 'percent_of employee';
+
+Question 2------------------------------------------
+
+/*
+AS a remote work advocate Working for a progressive HR tech startup who place their freshers’ clients IN large tech firms. 
+you're tasked WITH Identifying top 5 Country Having greatest count of large (company size) number of companies.
+*/
+select * from salaries;
+-- -------query 1------------------
+select company_size, company_location, COUNT(company_location) as country from salaries
+where experience_level = 'EN' AND  company_size = 'L'
+group by company_location order by country desc limit 5;
+
+-- -------query 2------------------
+select company_location, count(*) as total_count_of_cpountry from
+(
+select * from salaries where experience_level = 'EN' AND  company_size = 'L'
+)as ct
+group by company_location order by total_count_of_cpountry desc limit 5;
